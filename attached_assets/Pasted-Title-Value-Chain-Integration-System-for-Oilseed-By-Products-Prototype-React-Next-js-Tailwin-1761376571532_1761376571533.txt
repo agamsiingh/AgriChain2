@@ -1,0 +1,338 @@
+Title: Value Chain Integration System for Oilseed By-Products — Prototype (React + Next.js + Tailwind + Framer Motion)
+
+Goal (one line):
+Generate a beautifully crafted, fully interactive web prototype that demonstrates a complete value-chain platform connecting farmers, processors and buyers for oilseed by-products (meal, cake, husk, specialty by-products). The prototype must be production-polished UI/UX with realistic sample data, animations, and fully clickable flows (mocked API + mock blockchain transactions + simulated IoT streams).
+
+Global constraints & technology choices
+
+Frontend: Next.js (app router) + React + TypeScript.
+
+Styling: Tailwind CSS (utility-first) + design tokens.
+
+Animations: Framer Motion for entrance/hover/transaction animations.
+
+Charts: Recharts or Chart.js (use Recharts if available).
+
+Maps: Leaflet (with OpenStreetMap tiles) for farmer/warehouse locations.
+
+Mock backend & realtime: Local mock JSON server + Socket.IO (simulate realtime demand/supply). Provide both REST endpoints and a WebSocket simulator.
+
+Smart contract simulation: ethers.js with a mocked provider and a UI that shows simulated tx hashes and block confirmations (no real blockchain required).
+
+Predictive analytics demo: simple JS-based mock prediction engine (pre-seeded) or a call to a mock ML endpoint — show forecasted prices, confidence bands, and volatility heatmaps.
+
+Auth: Mock authentication (email-only OTP simulation). Role-based views: Farmer, Processor, Buyer, Admin.
+
+Accessibility: WCAG 2.1 AA compliant basics (contrast, keyboard focus, aria labels).
+
+Internationalization: i18n with two locales (en, hi) togglable in header (static demo strings).
+
+Deployment target: Replit dev server (npm run dev) and a static export route for live preview.
+
+High-level app pages & flows (must be created)
+
+Landing / Hero — clear value proposition, 3 animated CTA tiles (Join as Farmer / Processor / Buyer).
+
+Dashboard (role-specific) — overview cards, realtime demand-supply ticker, price charts, recent transactions, alerts.
+
+Marketplace — searchable, filterable listings for by-products (cards + list view + map view). Include advanced filters (by-product, grade, moisture, quantity, location radius, min price).
+
+Product Detail — quality metrics, supply timeline, negotiation chat widget, place order / propose price button, smart-contract toggle.
+
+Create Listing — multi-step form for farmers/processors to list by-products (photos, specs, IoT sensor attach, expected weight). Include inline validation and progress steps.
+
+Orders / Transaction Flow — negotiation, escrow (mocked smart contract), payment status animation, delivery tracking. Show sample blockchain tx hash and confirmations.
+
+Export Matchmaking — a visual funnel showing surplus detection, export leads, and matching suggestions with contact/export readiness score.
+
+Analytics & Forecasts — price prediction chart (with slider for horizon), volatility map, supply-demand heatmap, downloadable CSV and PDF snapshot.
+
+IoT Monitor — page to add/visualize sensor stream: feed showing moisture, temp, weight; simulated live updates; attach to a listing.
+
+Admin — user management, add demo buyers/processors, moderate listings, view system logs.
+
+Help / Onboarding — interactive walkthrough modal, tooltips, and a short product tour.
+
+Visual & UX specs (design tokens & microcopy)
+
+Primary palette (use design tokens):
+
+Primary: #0B6E4F (deep green)
+
+Accent: #F6A800 (warm saffron)
+
+Surface / Card: #FFFFFF
+
+Muted: #6B7280
+
+Danger/Alert: #E11D48
+
+Success: #10B981
+
+Typography:
+
+Headline: Inter or Poppins, weight 700
+
+Body: Inter / system UI, weight 400
+
+Sizes: h1 36px, h2 28px, h3 20px, body 16px, small 13px
+
+Spacing: base unit 8px (Tailwind default spacing scale).
+
+Microcopy examples:
+
+Landing tagline: “Monetize every seed: connect, trade, forecast.”
+
+CTA on listing: “Propose Offer” / “Start Escrow”
+
+Empty state copy: “No listings yet — create your first listing in 60 seconds.”
+
+Error toast: “Unable to connect to market feed — simulated feed offline.”
+
+Animations:
+
+Hero CTA: subtle upward float + scale (0.98 → 1) on load (Framer Motion).
+
+Card hover: depth lift (translateY -6px), shadow increase, slight scale.
+
+Transaction confirmation: animated confetti + progress bar for blockchain confirmations.
+
+Realtime ticker: smooth horizontal marquee with pause on hover.
+
+Component library & reusability
+
+Atomic components: Button, IconButton, Input, Select, Modal, Card, Table, Tag, Badge, Toast.
+
+Composite components: ListingCard, MarketplaceFilters, MapView, PriceChart, IoTFeedCard, OrderTimeline, EscrowWidget.
+
+All components must support props for accessibility, test-id attributes, and have keyboard focus states.
+
+Interactions & states (must be implemented)
+
+ListingSearch: typeahead with debounce (300ms), fuzzy search, server-side pagination (mock).
+
+Filters: multi-select chips, min-max numeric sliders, map radius.
+
+Negotiation chat: in-line chat with messages, attachments (images), options to propose price. Messages persisted in mock DB.
+
+Escrow: two-step modal: (1) create escrow (simulate signing with ethers.js mocked provider), (2) show tx hash and simulated confirmations (3 → confirmed). Add cancel button with animation.
+
+Realtime: WebSocket simulator that emits: new listing, price update, IoT sensor update every 3–8 seconds. UI shows toasts when relevant.
+
+Analytics: interactive tooltip on charts, brush selector to zoom, toggle between daily/weekly/monthly.
+
+Mock API + sample data (exact JSON examples)
+
+Create a local /mock folder with seed.json and a small express-based mock server or json-server. Provide endpoints:
+
+GET /api/listings?page=1&limit=12&query=soymeal&filters=...
+Sample listing object:
+
+{
+  "id": "LST-0001",
+  "title": "Soymeal (48% protein) - Bulk",
+  "type": "soymeal",
+  "grade": "48% Protein",
+  "quantity_kg": 12000,
+  "price_per_ton": 42000,
+  "location": { "lat": 25.3176, "lng": 82.9739, "address": "Varanasi, UP" },
+  "seller": { "id": "USR-F001", "name": "Ramesh Kumar", "role": "farmer", "rating": 4.6 },
+  "quality": { "moisture_pct": 9.2, "ash_pct": 6.5, "oil_pct": 1.5 },
+  "iot_device_id": "SENSOR-8891",
+  "images": ["/images/sample-soymeal-1.jpg"],
+  "created_at": "2025-10-15T08:30:00.000Z",
+  "status": "available"
+}
+
+
+GET /api/market/price-history?product=soymeal&range=90d
+Return array of { date, avgPrice, high, low, volume }.
+
+POST /api/listings — accepts listing object, returns created item.
+
+POST /api/orders — creates an order, returns order with escrow object.
+
+GET /api/export-matches?product=soymeal&surplus=true — returns array of potential buyers (country, port, demand_tons, readiness_score).
+
+WebSocket /ws — emits messages:
+
+{ "type": "price_update", "product": "soymeal", "price_per_ton": 42500, "timestamp": "..." }
+{ "type": "new_listing", "listing": { ... } }
+{ "type": "iot_update", "device_id":"SENSOR-8891", "moisture":9.4, "temp":29.2, "weight_kg":12000 }
+
+
+Seed at least 30 listings across soymeal, sunflower cake, husk, specialty by-products.
+
+Smart contract & transaction simulation
+
+Create EscrowSimulator module that uses ethers.js with a mock provider. When “Start Escrow” is clicked:
+
+UI shows modal “Signing…”
+
+Simulate a 2s delay then return a fake tx hash 0xabc... and show progress bar through 3 confirmations (1s each).
+
+On final confirmation, mark order as escrow confirmed and animate a success state.
+
+Show a “view transaction” overlay that lists: tx hash, timestamp, from, to, amount (mock), and a simulated gas fee.
+
+Predictive Analytics mock
+
+Provide a simple JS module predictor.js that computes price forecasts using seeded historical data and a basic AR(1)-like heuristic (or smoothed exponential). Display:
+
+Forecast line with confidence band (shaded area).
+
+Volatility score (low/medium/high) with explanation microcopy.
+
+Recommendation card: “Hold / Sell / Store / Export” based on forecast.
+
+UX polish & micro-interactions
+
+Use skeleton loaders while fetching mock API.
+
+Micro-interactions: small toast on action success, undo button for quick deletes, animated progress on uploads.
+
+Tour: a short interactive product tour on first load with highlighted hotspots (use Shepherd.js or a custom modal).
+
+Keyboard shortcuts: g m -> go to Marketplace, g d -> Dashboard, n -> New Listing modal. Display shortcut cheat-sheet in user menu.
+
+File structure (recommended)
+/app
+  /components
+    /ui (Button, Modal, Input)
+    ListingCard.tsx
+    PriceChart.tsx
+    IoTFeedCard.tsx
+  /pages (or app-router)
+    index.tsx
+    /dashboard
+    /marketplace
+    /listing/[id].tsx
+    /create-listing
+    /analytics
+    /iot
+    /admin
+  /lib
+    api.ts (mock client)
+    ws.ts (mock websocket)
+    escrowSimulator.ts
+    predictor.ts
+  /data
+    seed.json
+  /styles
+    tailwind.config.js
+  /public
+    /images (seed images)
+README.md
+package.json
+
+Accessibility & performance checklist
+
+All images must have alt.
+
+Buttons must be <button> or <a role="button"> with aria-pressed states.
+
+Color contrast for text >= 4.5:1 for body; for large text >= 3:1.
+
+Keyboard navigation (tab order), focus outlines visible.
+
+Lighthouse score target: >80 for Performance, >90 for Accessibility (with mocked data).
+
+Lazy-load heavy components (maps, charts) and images.
+
+README content (auto-generate)
+
+Include a README that explains:
+
+how to run: npm install → npm run dev
+
+API docs: list endpoints and sample payloads (as above).
+
+How to simulate realtime feed (run node mock/ws-sim.js or npm run ws-sim).
+
+How to seed data: npm run seed
+
+How to change role: use role toggle in header (no real auth required for prototype).
+
+How to run tests (if provided) and run accessibility checks.
+
+Sample CLI / package.json scripts (to include)
+"scripts": {
+  "dev": "next dev",
+  "build": "next build",
+  "start": "next start",
+  "seed": "node scripts/seed.js",
+  "ws-sim": "node scripts/ws-sim.js",
+  "mock-server": "node mock/server.js"
+}
+
+Design assets & icons
+
+Use Heroicons / Tabler / Feather for crisp icons.
+
+Use realistic photos from Unsplash (soy, farm, processing plant) — include filenames and alt text in /public/images.
+
+Provide SVG illustrations for empty states and success states (simple svg hero).
+
+Clickable demo content
+
+Pre-populate accounts:
+
+Farmer: Ramesh Kumar (UP) — 5 listings
+
+Processor: Hind Agro Pvt Ltd — 8 listings
+
+Buyer (Domestic): DairyPro Foods — 4 saved searches
+
+Export Buyer: GlobalFeeds Ltd (Egypt) — shows export demand
+
+Create 3 sample orders in different stages: negotiation, escrow-pending, delivered.
+
+Add one example export match for surplus soymeal showing steps to export (docs checklist).
+
+Deliverables to output in the repo (what the generator must produce)
+
+Full Next.js TypeScript app with the pages/components above.
+
+Mock server (/mock/server.js) with REST endpoints and seeded data file.
+
+WebSocket simulator (/mock/ws-sim.js) that emits price/listing/iot updates.
+
+Escrow simulation module using ethers.js (mocked).
+
+Predictor module with seeded “forecast” algorithm.
+
+README and a “How to demo” script that opens the app and shows the tour.
+
+A DEMO.md page with step-by-step user scenarios to click through (market flow, create listing, start escrow, view IoT stream, export match).
+
+All UI polished: Tailwind classes, Framer Motion hooks, accessible ARIA.
+
+Performance of the prompt
+
+When executed by a code-generation agent (or a human dev), this prompt must produce a working prototype where:
+
+Buttons are clickable and perform realistic mocked interactions.
+
+Charts and maps render with seeded data.
+
+Realtime updates animate into the UI.
+
+Smart-contract steps show fake tx and confirmations.
+
+The UI is responsive across desktop/tablet/mobile.
+
+Bonus (extra polish — include if possible)
+
+PDF export of analytics dashboards.
+
+CSV bulk upload for listings with a preview/validation step.
+
+“Price alert” subscription (mock notifications).
+
+Dark mode toggle with preserved design tokens.
+
+Tiny demo video/gif embedded in /public/demo.mp4 that auto-plays in a demo modal.
+
+Final delivery instructions for Replit (copy-paste)
+
+"Scaffold a Next.js + TypeScript app with Tailwind, Framer Motion, Recharts, Leaflet, ethers.js, Socket.IO (or simulated WS), and json-server. Implement the exact pages, components and behaviors described above. Populate the mock DB with 30 realistic seed listings across soymeal, cake, husk, and specialty byproducts. Ensure the app is fully interactive with mocked APIs and a simulated blockchain escrow flow. Include a README and a DEMO.md detailing how to navigate the prototype. Emphasize polished UI/UX, accessibility, and smooth animations. Create the ‘How to demo’ script that walks a reviewer through the flows step-by-step. Make the landing page and all CTA buttons clickable and wired to mock flows so the prototype feels production-ready."
