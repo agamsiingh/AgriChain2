@@ -68,7 +68,10 @@ export async function setupVite(app: Express, server: Server) {
 }
 
 export function serveStatic(app: Express) {
-  const distPath = path.resolve(import.meta.dirname, "public");
+  // When deploying, the frontend build lives under `frontend/dist`.
+  // Point the server to that directory so `res.sendFile(index.html)`
+  // returns the built client app.
+  const distPath = path.resolve(import.meta.dirname, "..", "frontend", "dist");
 
   if (!fs.existsSync(distPath)) {
     throw new Error(
