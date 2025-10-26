@@ -33,7 +33,7 @@ export function Header() {
             <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center">
               <Sprout className="h-6 w-6 text-primary-foreground" />
             </div>
-            <span className="font-['Poppins'] text-xl font-bold hidden sm:inline">AgriChain</span>
+            <span className="font-['Poppins'] text-xl font-bold hidden sm:inline">FarmShield</span>
           </a>
         </Link>
 

@@ -66,7 +66,7 @@ export default function Login() {
           <div className="h-12 w-12 rounded-lg bg-primary flex items-center justify-center">
             <Sprout className="h-8 w-8 text-primary-foreground" />
           </div>
-          <span className="font-['Poppins'] text-2xl font-bold">AgriChain</span>
+          <span className="font-['Poppins'] text-2xl font-bold">FarmShield</span>
         </div>
 
         <Card>
